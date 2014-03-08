@@ -1,5 +1,3 @@
-import curses
-
 # LogDisplay
 # - stdscr
 # - analyzer
@@ -18,12 +16,14 @@ class LogDisplay(object):
 
     def refresh_most_hits(self, logs):
         self.analyzer.analyze_most_hits(logs)
+        self.stdscr.addstr(1, 0, "haha")
+        self.stdscr.refresh()
         section, hits = self.analyzer.most_hits
         self.draw_most_hits(section, hits)
 
     def draw_most_hits(self, section, hits):
         output = "Section '%s' has most hits: %d" % (section, hits)
-        self.stdscr.addstr(0, 0, output[:self.width], curses.A_REVERSE)
+        self.stdscr.addstr(0, 0, output[:self.width])
         self.stdscr.refresh()
 
     def refresh_alert(self, logs):

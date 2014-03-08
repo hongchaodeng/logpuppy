@@ -1,4 +1,5 @@
 import re
+import sys
 
 class Traffic:
 
@@ -8,10 +9,6 @@ class Traffic:
         self.count = 0
         self.pos = 0
         self.avg = 0.0
-
-        self.pattern_url = re.compile(r'\S+ \S+ \S+ \[.+\] "\S+ (\S+) \S+"')
-        self.pattern_section = re.compile(r'/(.*?)/')
-        self.pattern_section_single = re.compile(r'/(.*?)')
 
     def add(self, item):
         pos = (self.pos + 1) % self.cap
@@ -47,13 +44,18 @@ class LogAnalyzer(object):
         self.threshold = int(threshold_s)
         self.traffic = Traffic(2 * 60)
 
+        self.pattern_url = re.compile(r'^\S+ \S+ \S+ \[.+\] "\S+ (\S+) \S+"')
+        self.pattern_section = re.compile(r'^/(.*?)/')
+        self.pattern_section_single = re.compile(r'^/(.*?)')
+
     def analyze_most_hits(self, logs):
         for line in logs:
             try:
                 m_url = self.pattern_url.match(line)
-                url = m.group(1)
+                url = m_url.group(1)
+
                 m_section = self.pattern_section.match(url)
-                if m_section == None:
+                if not m_section:
                     m_section = self.pattern_section_single.match(url)
                 section = m_section.group(1)
 
@@ -64,12 +66,11 @@ class LogAnalyzer(object):
                     self.section_hits[section] += 1
 
                 if self.section_hits[section] > self.most_hits[1]:
-                    self.most_hits[0] = section
-                    self.most_hits[1] = self.section_hits[section]
+                    self.most_hits = (section, self.section_hits[section])
 
             except:
                 # TODO: logging errors
-                pass
+                raise
 
 
     def analyze_alert(self, logs):

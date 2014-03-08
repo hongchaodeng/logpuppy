@@ -19,7 +19,8 @@ def logmonitor(stdscr, *args, **kwargs):
     display = LogDisplay(stdscr, analyzer)
 
     publisher.add_subscriber(
-            LogSubscriber(10, display.refresh_most_hits)
+            #LogSubscriber(10, display.refresh_most_hits)
+            LogSubscriber(1, display.refresh_most_hits)
             )
     publisher.add_subscriber(
             LogSubscriber(1, display.refresh_alert)

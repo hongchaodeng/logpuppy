@@ -11,7 +11,7 @@ class LogSubscriber(object):
         self.logs = []
 
     def mail(self, logs):
-        self.logs.append(logs)
+        self.logs += logs
         self.count -= 1
         if self.count == 0:
             self.callback(self.logs)

@@ -1,5 +1,6 @@
 # LogPublisher:
 # - subscriber_queue:
+# - - note that subscriber_queue is not thread safe.
 # - reader:
 class LogPublisher(object):
 

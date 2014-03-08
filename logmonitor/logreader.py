@@ -1,8 +1,8 @@
 # LogReader
-# - fd
-# - partitial_result:
+# - fd:
+# - partitial_result: A string that records half-read last line.
 class LogReader(object):
-    """a log reader that read and return the newly written entries"""
+    """log reader reads and returns the newly written entries"""
 
     def __init__(self, path):
         fd = open(path)
@@ -14,6 +14,8 @@ class LogReader(object):
             fd.seek(-1, 1)
             if fd.read(1) == '\n':
                 break
+            # offset the read(1)
+            fd.seek(-1, 1)
 
         self.fd = fd
         self.partitial_result = ''

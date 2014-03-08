@@ -7,8 +7,10 @@ class LogPublisher(object):
         self.subscriber_queue = []
         self.reader = reader
 
-    def addSubscriber(self, subscriber):
+    def add_subscriber(self, subscriber):
         self.subscriber_queue.append(subscriber)
 
     def publish(self):
-        pass
+        logs = self.reader.readlines()
+        for subscriber in subscriber_queue:
+            subscriber.mail(logs)

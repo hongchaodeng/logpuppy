@@ -18,15 +18,15 @@ def logmonitor(stdscr, *args, **kwargs):
     analyzer = LogAnalyzer(sys.argv[2])
     display = LogDisplay(stdscr, analyzer)
 
-    publisher.addSubscriber(
+    publisher.add_subscriber(
             LogSubscriber(10, display.refresh_most_hits)
             )
-    publisher.addSubscriber(
+    publisher.add_subscriber(
             LogSubscriber(1, display.refresh_alert)
             )
 
-    # main loop
-    while 1:
+    # publish event every one second
+    while True:
         time.sleep(1)
         publisher.publish()
 

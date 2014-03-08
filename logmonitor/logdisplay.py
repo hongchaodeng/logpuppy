@@ -16,14 +16,17 @@ class LogDisplay(object):
 
     def refresh_most_hits(self, logs):
         self.analyzer.analyze_most_hits(logs)
-        self.stdscr.addstr(1, 0, "haha")
-        self.stdscr.refresh()
         section, hits = self.analyzer.most_hits
         self.draw_most_hits(section, hits)
 
     def draw_most_hits(self, section, hits):
         output = "Section '%s' has most hits: %d" % (section, hits)
-        self.stdscr.addstr(0, 0, output[:self.width])
+        if self.width - len(output) > 0:
+            whitespaces = " " * (self.width - len(output))
+        else:
+            whitespaces = ""
+
+        self.stdscr.addstr(0, 0, output[:self.width] + whitespaces)
         self.stdscr.refresh()
 
     def refresh_alert(self, logs):

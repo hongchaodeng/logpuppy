@@ -45,8 +45,7 @@ class LogAnalyzer(object):
         self.traffic = Traffic(2 * 60)
 
         self.pattern_url = re.compile(r'^\S+ \S+ \S+ \[.+\] "\S+ (\S+) \S+"')
-        self.pattern_section = re.compile(r'^/(.*?)/')
-        self.pattern_section_single = re.compile(r'^/(.*?)')
+        self.pattern_section = re.compile(r'/(.+?)/')
 
     def analyze_most_hits(self, logs):
         for line in logs:
@@ -56,7 +55,7 @@ class LogAnalyzer(object):
 
                 m_section = self.pattern_section.match(url)
                 if not m_section:
-                    m_section = self.pattern_section_single.match(url)
+                    continue
                 section = m_section.group(1)
 
                 # update
@@ -69,7 +68,7 @@ class LogAnalyzer(object):
                     self.most_hits = (section, self.section_hits[section])
 
             except:
-                # TODO: logging errors
+                # TODO: logging and handling different errors
                 raise
 
 

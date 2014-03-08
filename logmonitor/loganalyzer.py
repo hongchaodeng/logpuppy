@@ -72,6 +72,6 @@ class LogAnalyzer(object):
                 pass
 
 
-    def analyze_alert(self):
+    def analyze_alert(self, logs):
         pass
 

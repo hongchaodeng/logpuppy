@@ -4,7 +4,7 @@ import time
 import random
 
 readFrom = open('test/access.log')
-writeTo = open('test/test.log')
+writeTo = open('test/test.log', 'w')
 
 lines = readFrom.readlines()
 

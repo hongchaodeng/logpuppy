@@ -28,6 +28,10 @@ Where first argument is the log file to be monitored, second argument is the thr
 
 Use *Ctrl + C* to quit the program.
 
+Architecture
+------
+![enter image description here][3]
+
 
 Testing for Alerting Logic
 ------
@@ -51,3 +55,4 @@ There are many kinds of improvement that could be done on this project. Here I a
 
   [1]: pictures/Selection_001.png
   [2]: pictures/Selection_002.png
+  [3]: pictures/arch.png

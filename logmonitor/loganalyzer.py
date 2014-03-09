@@ -1,5 +1,4 @@
 import re
-import sys
 
 class Traffic:
 
@@ -40,14 +39,21 @@ class LogAnalyzer(object):
         # for most hits
         self.section_hits = {}
         self.most_hits = ("", 0)
-        # for alerts
-        self.threshold = int(threshold_s)
-        self.traffic = Traffic(2 * 60)
 
         self.pattern_url = re.compile(r'^\S+ \S+ \S+ \[.+\] "\S+ (\S+) \S+"')
         self.pattern_section = re.compile(r'/(.+?)/')
 
+        # for alerts
+        self.threshold = int(threshold_s)
+        self.traffic = Traffic(2 * 60)
+        self.pattern_time = re.compile(r'^\S+ \S+ \S+ \[(.+)\]')
+        self.alerting = False
+
+
     def analyze_most_hits(self, logs):
+        # when parsing the string, the program needs to continue running even though
+        # the parsing went wrong. This is reasonable because we can't control
+        # external input.
         for line in logs:
             try:
                 m_url = self.pattern_url.match(line)
@@ -69,9 +75,26 @@ class LogAnalyzer(object):
 
             except:
                 # TODO: logging and handling different errors
-                raise
+                pass
 
 
     def analyze_alert(self, logs):
-        pass
+        count = len(logs)
+        self.traffic.add(count)
 
+        try:
+            m_time = self.pattern_time.match(logs[-1])
+            atTime = m_time.group(1)
+
+            if not self.alerting and self.traffic.average() >= self.threshold:
+                msg = "High traffic alert - hits = {}, trigger at {}".format(
+                        self.traffic.average(), atTime)
+            elif self.alerting and self.traffic.average() < self.threshold:
+                msg = "Traffic recovered at {}".format(atTime)
+            else:
+                msg = ""
+
+            return msg
+        except:
+            raise
+            return ""

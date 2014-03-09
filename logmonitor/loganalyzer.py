@@ -9,10 +9,10 @@ class Traffic:
         self.pos = 0
         self.avg = 0.0
 
-    def add(self, item):
+    def add(self, value):
         pos = (self.pos + 1) % self.cap
         old_value = self.queue[pos]
-        self.queue[pos] = item
+        self.queue[pos] = value
         self.pos = pos
 
         self.avg = self.avg * self.count
@@ -20,7 +20,7 @@ class Traffic:
             self.count += 1
         else:
             self.avg -= old_value
-        self.avg = (self.avg * + item) / self.count
+        self.avg = (self.avg + value) / self.count
 
     def average(self):
         return self.avg
@@ -32,7 +32,7 @@ class Traffic:
 # - most_hits: tuple of the (maximum hits section, hits)
 # # for alerts
 # - threshold:
-# - traffic
+# - traffic:
 class LogAnalyzer(object):
 
     def __init__(self, threshold_s):
@@ -79,22 +79,23 @@ class LogAnalyzer(object):
 
 
     def analyze_alert(self, logs):
-        count = len(logs)
-        self.traffic.add(count)
+        self.traffic.add( len(logs) )
 
         try:
             m_time = self.pattern_time.match(logs[-1])
             atTime = m_time.group(1)
 
             if not self.alerting and self.traffic.average() >= self.threshold:
-                msg = "High traffic alert - hits = {}, trigger at {}".format(
+                msg = "High traffic alert - hits = {:.2f}, trigger at {}".format(
                         self.traffic.average(), atTime)
+                self.alerting = True
             elif self.alerting and self.traffic.average() < self.threshold:
-                msg = "Traffic recovered at {}".format(atTime)
+                msg = "Traffic recovered below {} at {}".format(
+                        self.threshold, atTime)
+                self.alerting = False
             else:
                 msg = ""
 
             return msg
         except:
-            raise
             return ""

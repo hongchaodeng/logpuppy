@@ -5,7 +5,7 @@ What Is It
 ------
 This is a console program that monitors an actively written to HTTP log (e.g. apache log). Think of it a **htop** for apache log.
 
-Currently, it rovides two kinds of information:
+Currently, it provides two kinds of information:
 
 * Every 10s, displays the most visited section
 * If traffic in past 2 minutes went high or recovered, shows and keeps messages in a rotating manner.

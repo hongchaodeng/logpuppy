@@ -13,10 +13,10 @@ from logmonitor.logdisplay    import LogDisplay
 
 def logmonitor(stdscr, *args, **kwargs):
     # init
-    reader = LogReader(sys.argv[1])
+    reader    = LogReader(sys.argv[1])
     publisher = LogPublisher(reader)
-    analyzer = LogAnalyzer(sys.argv[2])
-    display = LogDisplay(stdscr, analyzer)
+    analyzer  = LogAnalyzer(sys.argv[2])
+    display   = LogDisplay(stdscr, analyzer)
 
     publisher.add_subscriber(
             LogSubscriber(10, display.refresh_most_hits)

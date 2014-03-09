@@ -1,4 +1,5 @@
 import re
+import time
 
 class Traffic:
 
@@ -46,7 +47,6 @@ class LogAnalyzer(object):
         # for alerts
         self.threshold = int(threshold_s)
         self.traffic = Traffic(2 * 60)
-        self.pattern_time = re.compile(r'^\S+ \S+ \S+ \[(.+)\]')
         self.alerting = False
 
 
@@ -81,21 +81,17 @@ class LogAnalyzer(object):
     def analyze_alert(self, logs):
         self.traffic.add( len(logs) )
 
-        try:
-            m_time = self.pattern_time.match(logs[-1])
-            atTime = m_time.group(1)
+        atTime = time.strftime("%d/%b/%Y:%H:%M:%S %z")
 
-            if not self.alerting and self.traffic.average() >= self.threshold:
-                msg = "High traffic alert - hits = {:.2f}, trigger at {}".format(
-                        self.traffic.average(), atTime)
-                self.alerting = True
-            elif self.alerting and self.traffic.average() < self.threshold:
-                msg = "Traffic recovered below {} at {}".format(
-                        self.threshold, atTime)
-                self.alerting = False
-            else:
-                msg = ""
+        if not self.alerting and self.traffic.average() >= self.threshold:
+            msg = "High traffic alert - hits = {:.2f}, trigger at {}".format(
+                    self.traffic.average(), atTime)
+            self.alerting = True
+        elif self.alerting and self.traffic.average() < self.threshold:
+            msg = "Traffic recovered below {} at {}".format(
+                    self.threshold, atTime)
+            self.alerting = False
+        else:
+            msg = ""
 
-            return msg
-        except:
-            return ""
+        return msg

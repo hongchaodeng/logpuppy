@@ -13,7 +13,5 @@ class LogPublisher(object):
 
     def publish(self):
         logs = self.reader.readlines()
-        if not logs:
-            return
         for subscriber in self.subscriber_queue:
             subscriber.mail(logs)
